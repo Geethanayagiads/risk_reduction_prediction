@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Health Data Form</title>
+  
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 0; 
+      height: 100vh; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      background: #f0f2f5;
+    }
+    .container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    h2 { margin-top: 25px; color: #0078D7; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    input, select { margin-top: 5px; padding: 8px; width: 100%; border: 1px solid #ccc; border-radius: 6px; }
+    .toggle { display: inline-flex; align-items: center; margin-top: 5px; }
+    .toggle input { width: auto; margin-right: 8px; }
+    .question { margin-top: 15px; }
+    .options { margin-left: 20px; }
+    .options label { font-weight: normal; display: block; }
+    button { 
+      margin-top: 20px; 
+      padding: 12px 20px; 
+      font-size: 16px;
+      background: #0078D7; 
+      color: white; 
+      border: none; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      width: 100%;
+      transition: 0.3s;
+    }
+    button:hover { background: #005bb5; }
+    .output { 
+      margin-top: 20px; 
+      padding: 20px; 
+      background: #f9f9f9; 
+      border: 1px solid #ddd; 
+      border-radius: 10px; 
+      font-size: 16px;
+      text-align: center;
+    }
+    .probability {
+      font-size: 20px;
+      font-weight: bold;
+      color: #d9534f;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>🧍 Personal Information</h2>
+    <label>Gender</label>
+    <select id="gender">
+      <option value="">--Select--</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select>
+
+    <label>Age</label>
+    <input type="number" id="age" min="0" max="120">
+    <input type="range" id="ageSlider" min="0" max="120" value="30" oninput="syncAge(this.value)">
+    <span id="ageValue">30</span>
+
+    <h2>❤️ Vital Signs</h2>
+    <label>Systolic BP (mmHg)</label>
+    <input type="number" id="systolic" min="50" max="250">
+
+    <label>Diastolic BP (mmHg)</label>
+    <input type="number" id="diastolic" min="30" max="150">
+
+    <label>Height (cm)</label>
+    <input type="number" id="height" placeholder="Enter height in cm">
+
+    <label>Weight (kg)</label>
+    <input type="number" id="weight" placeholder="Enter weight in kg">
+
+    <label>BMI (auto-calculated)</label>
+    <input type="text" id="bmi" readonly>
+
+    <h2>🧪 Lab Results</h2>
+    <label>HbA1c (%)</label>
+    <input type="number" step="0.1" id="hba1c">
+
+    <label>Total Cholesterol (mg/dL)</label>
+    <input type="number" id="cholesterol">
+
+    <h2>📅 Medical History</h2>
+    <label for="er_visits">ER Visits (past 12 months)</label>
+    <input type="number" id="er_visits" name="er_visits" min="0" max="20" step="1">
+
+    <label>Smoked 100 cigarettes (lifetime)</label>
+    <div class="toggle">
+      <input type="checkbox" id="smoked">
+      <span>Yes / No</span>
+    </div>
+
+    <label>Vigorous Activity (per day)</label>
+    <div class="toggle">
+      <input type="checkbox" id="activity">
+      <span>Yes / No</span>
+    </div>
+
+    <h2>🥗 Diet & Lifestyle</h2>
+    <div class="question">
+      <label>🥗 How often do you eat fruits & vegetables daily?</label>
+      <div class="options">
+        <label><input type="radio" name="fv" value="Never"> Never</label>
+        <label><input type="radio" name="fv" value="1–2 servings"> 1–2 servings</label>
+        <label><input type="radio" name="fv" value="3–5 servings"> 3–5 servings</label>
+        <label><input type="radio" name="fv" value=">5 servings"> >5 servings</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label>🍔 How often do you eat fast food / fried food per week?</label>
+      <div class="options">
+        <label><input type="radio" name="fastfood" value="Never"> Never</label>
+        <label><input type="radio" name="fastfood" value="1–2 times"> 1–2 times</label>
+        <label><input type="radio" name="fastfood" value="3–5 times"> 3–5 times</label>
+        <label><input type="radio" name="fastfood" value="Daily"> Daily</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label>🥤 How many sugary drinks do you usually drink per day?</label>
+      <div class="options">
+        <label><input type="radio" name="sugar" value="0"> 0</label>
+        <label><input type="radio" name="sugar" value="1"> 1</label>
+        <label><input type="radio" name="sugar" value="2–3"> 2–3</label>
+        <label><input type="radio" name="sugar" value=">3"> >3</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label>🧂 Do you add extra salt to food?</label>
+      <div class="options">
+        <label><input type="radio" name="salt" value="Never"> Never</label>
+        <label><input type="radio" name="salt" value="Sometimes"> Sometimes</label>
+        <label><input type="radio" name="salt" value="Often"> Often</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <label>🍞 Do you usually eat whole grains or refined carbs?</label>
+      <div class="options">
+        <label><input type="radio" name="carbs" value="Mostly refined"> Mostly refined</label>
+        <label><input type="radio" name="carbs" value="Mix"> Mix</label>
+        <label><input type="radio" name="carbs" value="Mostly whole grains"> Mostly whole grains</label>
+      </div>
+    </div>
+
+    <button onclick="submitForm()">Submit</button>
+
+    <div id="output" class="output" style="display:none;"></div>
+  </div>
+
+  <script>
+    // Sync age slider + number input
+    function syncAge(val) {
+      document.getElementById("age").value = val;
+      document.getElementById("ageValue").innerText = val;
+    }
+    document.getElementById("age").addEventListener("input", function() {
+      document.getElementById("ageSlider").value = this.value;
+      document.getElementById("ageValue").innerText = this.value;
+    });
+
+    // Auto calculate BMI
+    document.getElementById("height").addEventListener("input", calculateBMI);
+    document.getElementById("weight").addEventListener("input", calculateBMI);
+    function calculateBMI() {
+      let h = parseFloat(document.getElementById("height").value) / 100;
+      let w = parseFloat(document.getElementById("weight").value);
+      if (h > 0 && w > 0) {
+        document.getElementById("bmi").value = (w / (h * h)).toFixed(2);
+      }
+    }
+
+    // Mapping of diet answers to numeric values
+    const mapping = {
+      "fv": {
+        "Never": { Fiber: 5, Potassium: 1500 },
+        "1–2 servings": { Fiber: 10, Potassium: 2500 },
+        "3–5 servings": { Fiber: 20, Potassium: 3500 },
+        ">5 servings": { Fiber: 30, Potassium: 4500 }
+      },
+      "fastfood": {
+        "Never": { SatFat: 10, Sodium: 2000 },
+        "1–2 times": { SatFat: 15, Sodium: 2500 },
+        "3–5 times": { SatFat: 25, Sodium: 3000 },
+        "Daily": { SatFat: 40, Sodium: 4000 }
+      },
+      "sugar": {
+        "0": { Sugar: 10 },
+        "1": { Sugar: 40 },
+        "2–3": { Sugar: 80 },
+        ">3": { Sugar: 120 }
+      },
+      "salt": {
+        "Never": { Sodium: 2000 },
+        "Sometimes": { Sodium: 3000 },
+        "Often": { Sodium: 4000 }
+      },
+      "carbs": {
+        "Mostly refined": { Calories_Male: 2800, Calories_Female: 2200 },
+        "Mix": { Calories_Male: 2600, Calories_Female: 2100 },
+        "Mostly whole grains": { Calories_Male: 1800, Calories_Female: 1600 }
+      }
+    };
+
+    function submitForm() {
+      let data = {
+        Gender: document.getElementById("gender").value,
+        Age: document.getElementById("age").value,
+        SystolicBP: document.getElementById("systolic").value,
+        DiastolicBP: document.getElementById("diastolic").value,
+        BMI: document.getElementById("bmi").value,
+        HbA1c: document.getElementById("hba1c").value,
+        Cholesterol: document.getElementById("cholesterol").value,
+        ER_Visits: document.getElementById("er_visits").value,
+        Smoked: document.getElementById("smoked").checked ? "Yes" : "No",
+        VigorousActivity: document.getElementById("activity").checked ? "Yes" : "No",
+        Fiber: 0, Potassium: 0, SatFat: 0, Sodium: 0, Sugar: 0, Calories: 0, DietaryCholesterol: 300
+      };
+
+      let fv = document.querySelector('input[name="fv"]:checked')?.value;
+      let fastfood = document.querySelector('input[name="fastfood"]:checked')?.value;
+      let sugar = document.querySelector('input[name="sugar"]:checked')?.value;
+      let salt = document.querySelector('input[name="salt"]:checked')?.value;
+      let carbs = document.querySelector('input[name="carbs"]:checked')?.value;
+
+      if (fv) Object.assign(data, mapping.fv[fv]);
+      if (fastfood) Object.assign(data, mapping.fastfood[fastfood]);
+      if (sugar) Object.assign(data, mapping.sugar[sugar]);
+      if (salt) Object.assign(data, mapping.salt[salt]);
+      if (carbs) {
+        let selectedCarbs = mapping.carbs[carbs];
+        if (data.Gender === "Male") data.Calories = selectedCarbs.Calories_Male;
+        else if (data.Gender === "Female") data.Calories = selectedCarbs.Calories_Female;
+      }
+
+      fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(result => {
+        document.getElementById("output").style.display = "block";
+        let erProb = result.probabilities.ER_Visit;
+        document.getElementById("output").innerHTML = `
+          <h3>📊 Prediction Result</h3>
+          <p>The probability of visiting the ER again is:</p>
+          <p class="probability">${erProb}%</p>
+        `;
+      })
+      .catch(err => console.error("Error:", err));
+    }
+  </script>
+
+</body>
+</html>
